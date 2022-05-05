@@ -2,13 +2,15 @@
 
 #include "linkedlist.h"
 
+void foo(void *e)
+{
+    printf("%s\n", (char *)e);
+}
+
 int main()
 {
-  linkedlist * list = linkedlist_new();
-
-  linkedlist_add(list, "foo");
-  linkedlist_add(list, "bar");
-  linkedlist_add(list, "boom");
+    while(1)
+        linkedlist_destroy(linkedlist_add(linkedlist_new(), NULL));
 
   return 0;
 }

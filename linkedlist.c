@@ -16,7 +16,7 @@ struct linkedlist
 linkedlist * linkedlist_new(void)
 {
   linkedlist * list = (linkedlist *)malloc(sizeof(linkedlist));
-  list->next = (linkednode *)NULL;
+  list->next = NULL;
   return list;
 }
 
@@ -62,3 +62,78 @@ linkedlist * linkedlist_add(linkedlist * list, void * element)
   return list;
 }
 
+void * linkedlist_get(linkedlist * list, size_t index)
+{
+  if(list == NULL)
+    return NULL;
+
+  linkednode * node = list->next;
+  if(node == NULL)
+    return NULL;
+
+  for(size_t i = 0; i < index; ++i)
+    if(!(node = node->next))
+      return NULL;
+
+  return node->value;
+}
+
+void * linkedlist_remove(linkedlist * list, size_t index)
+{
+  if(list == NULL)
+    return NULL;
+
+  linkednode * node = list->next;
+  linkednode * lastnode = node;
+  node = node->next;
+  if(node == NULL)
+    return NULL;
+
+  if(index == 0)
+  {
+      linkednode * node1 = list->next;
+      list->next = node1->next;
+      void * value = node1->value;
+      free(node1);
+      return value;
+  }
+
+  for(size_t i = 0; i < (index - 1); ++i)
+  {
+      lastnode = node;
+      if(!(node = node->next))
+          return NULL;
+  }
+
+  void * value = node->value;
+  lastnode->next = node->next;
+
+  free(node);
+  return value;
+}
+
+linkedlist * linkedlist_foreach(linkedlist * list, void (*func)(void *))
+{
+    if(list == NULL)
+        return NULL;
+
+    if(func == NULL)
+        return list;
+
+    if(list->next == NULL)
+        return list;
+
+    for(linkednode * node = list->next; node; node = node->next)
+        func(node->value);
+    return list;
+}
+
+void linkedlist_destroy(linkedlist * list)
+{
+    if(list == NULL)
+        return;
+
+    for(linkednode * node = list->next; node; node = node->next)
+        free(node);// FIXME
+    free(list);
+}
