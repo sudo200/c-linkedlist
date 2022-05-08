@@ -133,7 +133,16 @@ void linkedlist_destroy(linkedlist * list)
     if(list == NULL)
         return;
 
-    for(linkednode * node = list->next; node; node = node->next)
-        free(node);// FIXME
+    if(list->next == NULL)
+        goto freelist;
+
+    linkednode *nextnode = list->next, *node = nextnode;
+    while((node = nextnode))
+    {
+        nextnode = node->next;
+	free(node);
+    }
+
+    freelist:
     free(list);
 }
